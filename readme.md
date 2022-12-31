@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: PDF Link Checker
-        uses: a-nau/pdf-link-checker@v0.1.0
+        uses: a-nau/pdf-link-checker@v0.1.1
         with:  # if all PDFs should be checked, just remove this part
           pdf_filepath: 'root.pdf'  # adjust to file path
 ```
