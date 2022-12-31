@@ -1,0 +1,11 @@
+name: "Check PDF URLs"
+description: "Check availability of URLs in PDF"
+inputs:
+  pdf_filepath: # path of pdf file
+    description: "Path to PDF file that should be checked. No input means all PDFs are checked"
+    required: false
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ inputs.pdf_filepath }}

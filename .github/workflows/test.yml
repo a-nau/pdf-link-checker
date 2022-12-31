@@ -1,0 +1,27 @@
+on: [push]
+
+jobs:
+  test_pdfchecker_single_file:
+    runs-on: ubuntu-latest
+    name: Test single file
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download sample
+        run: curl https://arxiv.org/pdf/2210.09814.pdf --output root.pdf
+      - name: Run Action
+        uses: ./ # Uses an action in the root directory
+        id: check_single
+        with:
+          pdf_filepath: 'root.pdf'
+  test_pdfchecker_all:
+    runs-on: ubuntu-latest
+    name: Test all files
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download sample
+        run: curl https://arxiv.org/pdf/2210.09814.pdf --output root.pdf
+      - name: Run Action
+        uses: ./ # Uses an action in the root directory
+        id: check_all
