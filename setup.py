@@ -4,7 +4,7 @@ import os
 import setuptools
 
 # Package meta-data.
-NAME = "pdflinkchecker"
+NAME = "pdflinkchecker_cli"
 DESCRIPTION = "Github Action and CLI tool to automatically check all links in a PDF for dead or broken links."
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
 URL = "https://github.com/a-nau/pdf-link-checker"
@@ -41,7 +41,7 @@ setuptools.setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     packages=setuptools.find_packages(),
-    entry_points={"console_scripts": ["pdflinkchecker = pdflinkchecker:check"]},
+    entry_points={"console_scripts": ["pdflinkchecker = pdflinkchecker_cli:check"]},
     install_requires=base_packages,
     include_package_data=True,
     license="MIT",
