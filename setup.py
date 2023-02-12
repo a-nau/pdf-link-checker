@@ -41,7 +41,6 @@ setuptools.setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     packages=setuptools.find_packages(),
-    scripts=["bin/pdflinkchecker"],
     entry_points={"console_scripts": ["pdflinkchecker = pdflinkchecker:check"]},
     install_requires=base_packages,
     include_package_data=True,
