@@ -58,7 +58,12 @@ def check_url(page_no: int, raw_url: str) -> LinkInfo:
         code = "tel"
     else:
         try:
-            code = urllib.request.urlopen(raw_url, timeout=5).getcode()
+            req = urllib.request.Request(raw_url)
+            req.add_header(
+                "User-Agent",
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
+            )
+            code = urllib.request.urlopen(req, timeout=5).getcode()
         except urllib.error.HTTPError as e:
             code = "error"
             error_details = repr(e)
@@ -77,11 +82,7 @@ def check_urls_in_pdf(pdf_path: str) -> List[LinkInfo]:
     print(f"File {pdf_path}, found: {dict(counter)}")
     errors = [r.error_summary for r in link_results if r.code == "error"]
     print(
-        tabulate(
-            errors,
-            headers=["Page Number", "URL", "Details"],
-            tablefmt="orgtbl",
-        )
+        tabulate(errors, headers=["Page Number", "URL", "Details"], tablefmt="orgtbl",)
     )
     return errors
 
