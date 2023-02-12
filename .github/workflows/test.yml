@@ -13,7 +13,7 @@ jobs:
         uses: ./ # Uses an action in the root directory
         id: check_single
         with:
-          pdf_filepath: 'root.pdf'
+          paths: 'root.pdf'
   test_pdfchecker_all:
     runs-on: ubuntu-latest
     name: Test all files
@@ -25,3 +25,5 @@ jobs:
       - name: Run Action
         uses: ./ # Uses an action in the root directory
         id: check_all
+        with:
+          paths: '.'

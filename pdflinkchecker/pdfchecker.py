@@ -1,11 +1,11 @@
 import argparse
 import urllib.request
 from collections import Counter
-from socket import timeout
 from dataclasses import dataclass
 from multiprocessing.pool import ThreadPool
-from typing import List
 from pathlib import Path
+from socket import timeout
+from typing import List
 
 import PyPDF2 as pypdf
 from tabulate import tabulate
@@ -19,11 +19,6 @@ class LinkInfo:
     url: str
     code: str
     error_details: str
-
-    def __repr__(self) -> str:
-        return (
-            f"On page {self.page_no} for URL {self.url} got error: {self.error_details}"
-        )
 
     @property
     def error_summary(self):
@@ -87,7 +82,7 @@ def check_urls_in_pdf(pdf_path: str) -> List[LinkInfo]:
         for result in result.get():
             link_results.append(result)
     counter = Counter([l.code for l in link_results])
-    print(f"File {pdf_path}, found the following types of links: {dict(counter)}")
+    print(f"\nAnalyzed {pdf_path}, found the following types of links: {dict(counter)}")
     errors = [r.error_summary for r in link_results if r.code == "error"]
     if len(errors) > 0:
         print(
@@ -99,22 +94,36 @@ def check_urls_in_pdf(pdf_path: str) -> List[LinkInfo]:
 
 
 def check():
-    parser = argparse.ArgumentParser(description="Check all URL embedded in your PDF")
-    parser.add_argument("-p", "--pdf_path", help="Path to PDF file", required=False)
+    parser = argparse.ArgumentParser(description="Check all URLs embedded in your PDF.")
+    parser.add_argument(
+        "paths",
+        type=str,
+        nargs="+",
+        help="Paths to directories or files that should be checked.",
+    )
     args = parser.parse_args()
-    if args.pdf_path is not None:
-        pdf_paths = [args.pdf_path]
-    else:
-        ROOT = Path(__file__).parent.parent
-        pdf_paths = [str(f) for f in ROOT.rglob("*.pdf")]
+
+    pdf_paths = []
+    for path in args.paths:
+        path = Path(path)
+        if path.is_dir():
+            pdf_paths.extend([str(f) for f in path.rglob("*.pdf")])
+        else:
+            if path.suffix == ".pdf":
+                pdf_paths.append(str(path))
+            else:
+                print(f"Specified file {path} is not a PDF. Skipping.")
 
     errors = {}
     for pdf_path in pdf_paths:
         error_report = check_urls_in_pdf(pdf_path)
         errors[pdf_path] = len(error_report)
-    if sum(list(errors.values())) > 0:
-        raise ValueError(f"Found unavailable links!: {errors}")
+    erroneous_pdfs = sum(list(errors.values())) > 0
+    if erroneous_pdfs:
+        return f"\n\nFound the following PDFs with unavailable links: {errors}"
 
 
 if __name__ == "__main__":
-    check()
+    errors = check()
+    if errors is not None:
+        raise ValueError(errors.replace("\n", ""))

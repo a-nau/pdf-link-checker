@@ -5,10 +5,7 @@ import setuptools
 
 # Package meta-data.
 NAME = "pdflinkchecker"
-DESCRIPTION = (
-    "Code generator that produces a Python class from a YAML input file. "
-    "Can be used to facilitate code completion for config objects. "
-)
+DESCRIPTION = "Github Action and CLI tool to automatically check all links in a PDF for dead or broken links."
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
 URL = "https://github.com/a-nau/pdf-link-checker"
 EMAIL = "alex.code@mail.com"
@@ -19,18 +16,6 @@ REQUIRES_PYTHON = ">=3.7.0"
 base_packages = [
     "PyPDF2==2.12.*",
     "tabulate",
-]
-
-dev_packages = base_packages + [
-    "black>=20.1.0",
-    "isort==5.9.3",
-    "mypy>=0.761",
-    "pre-commit>=2.9.2",
-    "pytest>=4.5.0",
-    "pytest-cov>=2.6.1",
-    "pyupgrade>=3.2.0",
-    # mypy
-    "types-PyYAML",
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -57,26 +42,20 @@ setuptools.setup(
     url=URL,
     packages=setuptools.find_packages(),
     scripts=["bin/pdflinkchecker"],
-    entry_points={
-        "console_scripts": [
-            "pdflinkchecker = pdflinkchecker:check"
-        ]
-    },
+    entry_points={"console_scripts": ["pdflinkchecker = pdflinkchecker:check"]},
     install_requires=base_packages,
-    extras_require={"dev": dev_packages,},
     include_package_data=True,
     license="MIT",
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        "License :: OSI Approved :: BSD License",
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
     ],
     ext_modules=[],

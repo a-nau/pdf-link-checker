@@ -7,6 +7,6 @@ COPY requirements.txt /src/requirements.txt
 RUN pip install -r requirements.txt
 
 
-COPY pdfchecker.py /src/pdfchecker.py
+COPY pdflinkchecker/pdfchecker.py /src/pdfchecker.py
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
