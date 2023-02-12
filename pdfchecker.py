@@ -88,8 +88,8 @@ def check_urls_in_pdf(pdf_path: str) -> List[LinkInfo]:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Check all URL embedded in your PDF')
-    parser.add_argument('-p', '--pdf_path', help='Path to PDF file', required=False)
+    parser = argparse.ArgumentParser(description="Check all URL embedded in your PDF")
+    parser.add_argument("-p", "--pdf_path", help="Path to PDF file", required=False)
     args = parser.parse_args()
     if args.pdf_path is not None:
         pdf_paths = [args.pdf_path]
