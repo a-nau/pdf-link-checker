@@ -18,6 +18,20 @@ pdflinkchecker path/to/pdf                # to check a specific file
 pdflinkchecker path/to/pdf1 path/to/pdf2  # to check multiple specific files
 ```
 
+Exemplary output looks like this
+
+```shell
+Analyzed /data/dummy1.pdf, found the following types of links/http codes: {200: 13}
+
+Analyzed /data/dummy2.pdf, found the following types of links/http codes: {'mail': 4, 'tel': 4, 200: 49, 'error': 3}
+|   Page Number | URL                      | Details                                                             |
+|---------------+--------------------------+---------------------------------------------------------------------|
+|             1 | https://www.example1.com | <HTTPError 999: 'INKApi Error'>                                     |
+|             1 | https://www.example2.com | URLError(timeout('_ssl.c:1112: The handshake operation timed out')) |
+|             1 | https://www.example3.com | <HTTPError 403: 'Forbidden'>                                        |
+
+```
+
 To use the Github Action, create a `pdf_link_checker.yml` in `.github/workflows`:
 
 ```yaml

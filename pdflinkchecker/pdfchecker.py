@@ -82,7 +82,7 @@ def check_urls_in_pdf(pdf_path: str) -> List[LinkInfo]:
         for result in result.get():
             link_results.append(result)
     counter = Counter([l.code for l in link_results])
-    print(f"\nAnalyzed {pdf_path}, found the following types of links: {dict(counter)}")
+    print(f"\nAnalyzed {pdf_path}, found the following types of links/http codes: {dict(counter)}")
     errors = [r.error_summary for r in link_results if r.code == "error"]
     if len(errors) > 0:
         print(
