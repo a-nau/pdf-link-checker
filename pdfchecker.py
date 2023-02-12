@@ -93,7 +93,7 @@ if __name__ == "__main__":
     if args.pdf_path is not None:
         pdf_paths = [args.pdf_path]
     else:
-        ROOT = Path(__file__).parent.parent
+        ROOT = Path(__file__).parent
         pdf_paths = [str(f) for f in ROOT.rglob("*.pdf")]
 
     errors = {}
