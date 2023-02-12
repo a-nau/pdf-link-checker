@@ -10,6 +10,8 @@ from pathlib import Path
 import PyPDF2 as pypdf
 from tabulate import tabulate
 
+__all__ = ["check", "check_url", "check_urls_in_pdf", "get_links_from_page"]
+
 
 @dataclass
 class LinkInfo:
@@ -28,7 +30,9 @@ class LinkInfo:
         return [self.page_no, self.url, self.error_details]
 
 
-def get_links_from_page(indexstart, indexend, pdf) -> List[List]:
+def get_links_from_page(
+    indexstart: int, indexend: int, pdf: pypdf.PdfFileReader
+) -> List[List]:
     """ PDF Link Check
         For more information see: https://github.com/mattbriggs/pdf-link-checker
         PDFLinkCheck.py checks the hyperlinks in an Portable Document Format (PDF)
@@ -62,7 +66,7 @@ def check_url(page_no: int, raw_url: str) -> LinkInfo:
             req = urllib.request.Request(raw_url)
             req.add_header(
                 "User-Agent",
-                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
+                "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
             )
             code = urllib.request.urlopen(req, timeout=5).getcode()
         except (urllib.error.HTTPError, timeout, urllib.error.URLError) as e:
@@ -83,22 +87,25 @@ def check_urls_in_pdf(pdf_path: str) -> List[LinkInfo]:
         for result in result.get():
             link_results.append(result)
     counter = Counter([l.code for l in link_results])
-    print(f"File {pdf_path}, found: {dict(counter)}")
+    print(f"File {pdf_path}, found the following types of links: {dict(counter)}")
     errors = [r.error_summary for r in link_results if r.code == "error"]
-    print(
-        tabulate(errors, headers=["Page Number", "URL", "Details"], tablefmt="orgtbl",)
-    )
+    if len(errors) > 0:
+        print(
+            tabulate(
+                errors, headers=["Page Number", "URL", "Details"], tablefmt="orgtbl",
+            )
+        )
     return errors
 
 
-if __name__ == "__main__":
+def check():
     parser = argparse.ArgumentParser(description="Check all URL embedded in your PDF")
     parser.add_argument("-p", "--pdf_path", help="Path to PDF file", required=False)
     args = parser.parse_args()
     if args.pdf_path is not None:
         pdf_paths = [args.pdf_path]
     else:
-        ROOT = Path(__file__).parent
+        ROOT = Path(__file__).parent.parent
         pdf_paths = [str(f) for f in ROOT.rglob("*.pdf")]
 
     errors = {}
@@ -107,3 +114,7 @@ if __name__ == "__main__":
         errors[pdf_path] = len(error_report)
     if sum(list(errors.values())) > 0:
         raise ValueError(f"Found unavailable links!: {errors}")
+
+
+if __name__ == "__main__":
+    check()
