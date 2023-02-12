@@ -1,6 +1,7 @@
 import argparse
 import urllib.request
 from collections import Counter
+from socket import timeout
 from dataclasses import dataclass
 from multiprocessing.pool import ThreadPool
 from typing import List
@@ -64,9 +65,12 @@ def check_url(page_no: int, raw_url: str) -> LinkInfo:
                 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
             )
             code = urllib.request.urlopen(req, timeout=5).getcode()
-        except urllib.error.HTTPError as e:
+        except (urllib.error.HTTPError, timeout, urllib.error.URLError) as e:
             code = "error"
             error_details = repr(e)
+        except Exception as e:
+            code = "error"
+            error_details = f"Unknown: {repr(e)}"
     return LinkInfo(page_no, raw_url, code, error_details)
 
 
