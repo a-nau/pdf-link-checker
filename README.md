@@ -7,7 +7,7 @@ Github Action and CLI tool to automatically check all links in a PDF for availab
 Install the package using `pip`
 
 ```shell
-pip install pdflinkchecker_cli
+pip install pdflinkchecker-cli
 ```
 
 and use it as a CLI tool
