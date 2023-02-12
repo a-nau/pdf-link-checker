@@ -1,16 +1,41 @@
 # PDF Link Checker
 
-Github Action to automatically check all links in a PDF for availability to find dead or broken links.
-Code is partially based on [pdf-link-checker](https://github.com/mattbriggs/pdf-link-checker)
-by [Matt Briggs](https://github.com/mattbriggs).
-
+Github Action and CLI tool to automatically check all links in a PDF for availability to find dead or broken links.
 
 ## Usage
+
+Install the package using `pip`
+
+```shell
+pip install pdflinkchecker
+```
+
+and use it as a CLI tool
+
+```shell
+pdflinkchecker .                          # to search for and check all pdfs in the current directory recursively
+pdflinkchecker path/to/pdf                # to check a specific file
+pdflinkchecker path/to/pdf1 path/to/pdf2  # to check multiple specific files
+```
+
+Exemplary output looks like this
+
+```shell
+Analyzed /data/dummy1.pdf, found the following types of links/http codes: {200: 13}
+
+Analyzed /data/dummy2.pdf, found the following types of links/http codes: {'mail': 4, 'tel': 4, 200: 49, 'error': 3}
+|   Page Number | URL                      | Details                                                             |
+|---------------+--------------------------+---------------------------------------------------------------------|
+|             1 | https://www.example1.com | <HTTPError 999: 'INKApi Error'>                                     |
+|             1 | https://www.example2.com | URLError(timeout('_ssl.c:1112: The handshake operation timed out')) |
+|             1 | https://www.example3.com | <HTTPError 403: 'Forbidden'>                                        |
+
+```
 
 To use the Github Action, create a `pdf_link_checker.yml` in `.github/workflows`:
 
 ```yaml
-on: [push]
+on: [ push ]
 
 jobs:
   check_pdf_links:
@@ -20,23 +45,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: PDF Link Checker
-        uses: a-nau/pdf-link-checker@v0.1.2
-        with:  # if all PDFs should be checked, just remove this part
-          pdf_filepath: 'root.pdf'  # adjust to file path
+        uses: a-nau/pdf-link-checker@v0.1.3
+        with:
+          paths: '.'  # checks all PDFs, otherwise specify to file path(s)
 ```
 
 To run within Docker
 
 ```shell
 docker build -t pdf_link_checker .
-docker run -it --rm --mount type=bind,source=${PWD},target=/data/ --name pdf_link_checker pdf_link_checker
-```
-
-and to run locally with `Python 3.9`
-
-```shell
-pip install PyPDF2==2.12.* tabulate
-python pdfchecker.py --pdf_path FILE_PATH
+docker run -it --rm --mount type=bind,source=${PWD},target=/data/ --name pdf_link_checker pdf_link_checker /data/.
 ```
 
 ## Credits
